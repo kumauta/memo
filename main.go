@@ -80,6 +80,7 @@ type config struct {
 	Width            int    `toml:"width"`
 	SelectCmd        string `toml:"selectcmd"`
 	GrepCmd          string `toml:"grepcmd"`
+	GrepCopyCmd      string `toml:"grepcopycmd"`
 	MemoTemplate     string `toml:"memotemplate"`
 	AssetsDir        string `toml:"assetsdir"`
 	PluginsDir       string `toml:"pluginsdir"`
@@ -138,6 +139,12 @@ var commands = []cli.Command{
 		Aliases: []string{"g"},
 		Usage:   "grep memo",
 		Action:  cmdGrep,
+	},
+	{
+		Name:    "grepcopy",
+		Aliases: []string{"gc"},
+		Usage:   "grep and copy memo",
+		Action:  cmdGrepCopy,
 	},
 	{
 		Name:    "config",
@@ -227,6 +234,7 @@ func (cfg *config) load() error {
 	cfg.Column = 20
 	cfg.SelectCmd = "peco"
 	cfg.GrepCmd = "grep -nH ${PATTERN} ${FILES}"
+	cfg.GrepCopyCmd = "grep ${PATTERN} ${FILES} | peco | pbcopy"
 	cfg.AssetsDir = "."
 	dir = filepath.Join(confDir, "plugins")
 	os.MkdirAll(dir, 0700)
@@ -686,7 +694,7 @@ func cmdDelete(c *cli.Context) error {
 	return nil
 }
 
-func cmdGrep(c *cli.Context) error {
+func execGrep(c *cli.Context, cmd string) error {
 	var cfg config
 	err := cfg.load()
 	if err != nil {
@@ -710,7 +718,25 @@ func cmdGrep(c *cli.Context) error {
 	for _, file := range files {
 		args = append(args, filepath.Join(cfg.MemoDir, file))
 	}
-	return cfg.runcmd(cfg.GrepCmd, c.Args().First(), args...)
+	return cfg.runcmd(cmd, c.Args().First(), args...)
+}
+
+func cmdGrep(c *cli.Context) error {
+	var cfg config
+	err := cfg.load()
+	if err != nil {
+		return err
+	}
+	return execGrep(c, cfg.GrepCmd)
+}
+
+func cmdGrepCopy(c *cli.Context) error {
+	var cfg config
+	err := cfg.load()
+	if err != nil {
+		return err
+	}
+	return execGrep(c, cfg.GrepCopyCmd)
 }
 
 func cmdConfig(c *cli.Context) error {

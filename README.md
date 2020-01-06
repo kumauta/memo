@@ -17,14 +17,15 @@ VERSION:
    0.0.4
 
 COMMANDS:
-     new, n     create memo
-     list, l    list memo
-     edit, e    edit memo
-     delete, d  delete memo
-     grep, g    grep memo
-     config, c  configure
-     serve, s   start http server
-     help, h    Shows a list of commands or help for one command
+     new, n          create memo
+     list, l         list memo
+     edit, e         edit memo
+     delete, d       delete memo
+     grep, g         grep memo
+     grepcopy, gc    grep and copy memo (Support mac only)
+     config, c       configure
+     serve, s        start http server
+     help, h         Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
    --help, -h     show help
@@ -69,6 +70,7 @@ editor = "vim"                    # your favorite text editor
 column = 30                       # column size for list command
 selectcmd = "peco"                # selector command for edit command
 grepcmd = "grep -nH"              # grep command executable
+grepcopycmd = "grep -i ${PATTERN} ${FILES} | peco | pbcopy"
 assetsdir = "/path/to/assets"     # assets directory for serve command
 pluginsdir = "path/to/plugins"    # plugins directory for plugin commands. default '~/.config/memo/plugins'.
 ```
