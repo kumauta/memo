@@ -233,8 +233,8 @@ func (cfg *config) load() error {
 	}
 	cfg.Column = 20
 	cfg.SelectCmd = "peco"
-	cfg.GrepCmd = "grep -nH ${PATTERN} ${FILES}"
-	cfg.GrepCopyCmd = "grep ${PATTERN} ${FILES} | peco | pbcopy"
+	cfg.GrepCmd = "grep -inH ${PATTERN} ${FILES}"
+	cfg.GrepCopyCmd = "grep -i ${PATTERN} ${FILES} | peco | pbcopy"
 	cfg.AssetsDir = "."
 	dir = filepath.Join(confDir, "plugins")
 	os.MkdirAll(dir, 0700)
